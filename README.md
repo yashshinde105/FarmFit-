@@ -1,12 +1,13 @@
 # FARMFIT_MODEL
 
-FARMFIT_MODEL is a sugarcane-focused machine learning project that combines image-based disease detection, time-series forecasting, and an agricultural chatbot assistant.
+FARMFIT_MODEL is a sugarcane-focused machine learning project that combines image-based disease detection, time-series forecasting, an agricultural chatbot assistant, and a React frontend.
 
 The repository currently contains multiple runnable entry points:
 
 - `app.py` and `app2.py` provide FastAPI and Flask APIs for sugarcane leaf disease prediction from uploaded images.
 - `app_test.py` provides a Flask API for forecasting crop conditions from CSV sensor/time-series data.
 - `app_chatbot.py` provides a Flask API that combines image predictions with an LLM-powered agricultural advisor.
+- `frontend/` contains the React/Vite user interface from the other project clone.
 - Several trained model files and notebooks are included for experimentation and retraining.
 
 ## Project Goals
@@ -18,6 +19,7 @@ The repository currently contains multiple runnable entry points:
 
 ## Repository Structure
 
+- `frontend/` - React/Vite frontend application.
 - `app.py` - FastAPI image classification API using EfficientNetB0 and `dominator.h5`.
 - `app2.py` - Flask crop forecasting API using an LSTM model, a regressor, and a classifier.
 - `app_chatbot.py` - Flask assistant API that uses LangChain, Groq, and Tavily.
@@ -95,6 +97,18 @@ The chatbot and LLM-based APIs expect these variables:
 Create a local `.env` file if you want to run `app_chatbot.py` or the LLM-enhanced FastAPI variant in `app_test.py`.
 
 ## Running the APIs
+
+### 0. Frontend app
+
+Run the frontend from the `frontend/` folder:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The app runs with Vite and uses the backend APIs for prediction and assistant features.
 
 ### 1. Image prediction API with FastAPI
 
