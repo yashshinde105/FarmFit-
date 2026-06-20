@@ -1,3 +1,117 @@
+# 🌾 FarmFIT - Precision Agriculture Platform
+
+> Smart farming powered by AI, satellite imaging, and real-time analytics
+
+![FarmFIT](https://img.shields.io/badge/FarmFIT-Precision%20Agriculture-4ade80) ![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-5.4.19-646CFF?logo=vite)
+
+## 🚀 Overview
+FarmFIT is a modern precision agriculture platform that helps farmers make data-driven decisions. Using satellite imaging, IoT sensors, and machine learning, FarmFIT provides real-time insights into crop health, soil conditions, weather patterns, and potential threats.
+
+## ✨ Key Features
+
+- 🛰️ Spectral Health Maps — real-time crop health monitoring using satellite and drone imaging
+- 💧 Soil Monitoring — track soil moisture, nutrients, and conditions with precision sensors
+- 🐛 Pest Prediction — early detection and risk assessment using machine learning
+- 📊 Agricultural Dashboard — comprehensive real-time insights for precision farming
+- ⚡ Live Alerts — instant notifications for crop stress and environmental changes
+- 🌦️ Weather Integration — real-time weather data and forecasting
+- 📈 NDVI Analysis — vegetation index tracking for crop health assessment
+
+## 🎯 Benefits
+
+- ✅ Increase crop yields by up to **25%**
+- ✅ Reduce water usage by **30%**
+- ✅ Early pest detection reduces crop loss by **~15%**
+- ✅ Data-driven decisions for optimal farming
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- **React 18** (TypeScript) — modern UI
+- **Vite** — fast build and dev server
+- **TailwindCSS** — utility-first styling
+- **Shadcn/UI** — component primitives
+- **Framer Motion** — animations
+- **Recharts** — charts and visualizations
+
+### Backend / ML
+
+- **Python 3.10+** — backend and ML scripts
+- **FastAPI** / **Flask** — API endpoints
+- **TensorFlow** — image & time-series models
+- **scikit-learn** — regressors, scalers, classifier
+- **LangChain** + provider (Groq/Tavily) — optional chatbot assistant
+
+## 📁 Project Structure
+
+```
+FARMFIT_MODEL/
+├─ frontend/                # React + Vite frontend (UI)
+├─ dominator.h5             # image classification weights
+├─ latest_crop_TS_model.h5  # time-series model
+├─ Classifier.joblib        # classifier artifact
+├─ Regressor.joblib         # regressor artifact
+├─ LSTM_scaler.joblib       # scaler for time-series
+├─ app.py                   # FastAPI image predict service
+├─ app_test.py              # FastAPI + LLM variant
+├─ app2.py                  # Flask forecasting service
+├─ app_chatbot.py           # Flask chatbot (LangChain + Groq + Tavily)
+├─ dataset_main.csv         # example datasets
+├─ sugarcane_sensor_timeseries.csv
+└─ README.md
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ (or Bun)
+- Python 3.10+
+- npm or yarn
+
+### Install & run frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+# Open http://localhost:5173
+```
+
+### Python backend (example)
+
+```bash
+python -m venv .venv
+source .venv/bin/activate   # on Windows: .venv\\Scripts\\activate
+pip install --upgrade pip
+pip install -r requirements.txt  # if you add one, otherwise install manually
+
+# Start FastAPI image service
+uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+
+# Start Flask forecasting service
+python app2.py
+
+# Start chatbot (optional)
+python app_chatbot.py
+```
+
+## 🔬 API Examples
+
+- Image predict (FastAPI):
+
+```bash
+curl -F "file=@leaf.jpg" http://localhost:8000/predict
+```
+
+- Forecast (Flask):
+
+```bash
+curl -F "file=@sensor.csv" http://localhost:5000/results
+```
+
+
 # FARMFIT_MODEL
 
 FARMFIT_MODEL is a sugarcane-focused machine learning project that combines image-based disease detection, time-series forecasting, an agricultural chatbot assistant, and a React frontend.
@@ -139,118 +253,7 @@ Create a `.env` file (root or `frontend` as needed) for any of the following val
 
 1) Start the image classifier (FastAPI):
 
-# 🌾 FarmFIT - Precision Agriculture Platform
 
-> Smart farming powered by AI, satellite imaging, and real-time analytics
-
-![FarmFIT](https://img.shields.io/badge/FarmFIT-Precision%20Agriculture-4ade80) ![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-5.4.19-646CFF?logo=vite)
-
-## 🚀 Overview
-FarmFIT is a modern precision agriculture platform that helps farmers make data-driven decisions. Using satellite imaging, IoT sensors, and machine learning, FarmFIT provides real-time insights into crop health, soil conditions, weather patterns, and potential threats.
-
-## ✨ Key Features
-
-- 🛰️ Spectral Health Maps — real-time crop health monitoring using satellite and drone imaging
-- 💧 Soil Monitoring — track soil moisture, nutrients, and conditions with precision sensors
-- 🐛 Pest Prediction — early detection and risk assessment using machine learning
-- 📊 Agricultural Dashboard — comprehensive real-time insights for precision farming
-- ⚡ Live Alerts — instant notifications for crop stress and environmental changes
-- 🌦️ Weather Integration — real-time weather data and forecasting
-- 📈 NDVI Analysis — vegetation index tracking for crop health assessment
-
-## 🎯 Benefits
-
-- ✅ Increase crop yields by up to **25%**
-- ✅ Reduce water usage by **30%**
-- ✅ Early pest detection reduces crop loss by **~15%**
-- ✅ Data-driven decisions for optimal farming
-
-## 🛠️ Tech Stack
-
-### Frontend
-
-- **React 18** (TypeScript) — modern UI
-- **Vite** — fast build and dev server
-- **TailwindCSS** — utility-first styling
-- **Shadcn/UI** — component primitives
-- **Framer Motion** — animations
-- **Recharts** — charts and visualizations
-
-### Backend / ML
-
-- **Python 3.10+** — backend and ML scripts
-- **FastAPI** / **Flask** — API endpoints
-- **TensorFlow** — image & time-series models
-- **scikit-learn** — regressors, scalers, classifier
-- **LangChain** + provider (Groq/Tavily) — optional chatbot assistant
-
-## 📁 Project Structure
-
-```
-FARMFIT_MODEL/
-├─ frontend/                # React + Vite frontend (UI)
-├─ dominator.h5             # image classification weights
-├─ latest_crop_TS_model.h5  # time-series model
-├─ Classifier.joblib        # classifier artifact
-├─ Regressor.joblib         # regressor artifact
-├─ LSTM_scaler.joblib       # scaler for time-series
-├─ app.py                   # FastAPI image predict service
-├─ app_test.py              # FastAPI + LLM variant
-├─ app2.py                  # Flask forecasting service
-├─ app_chatbot.py           # Flask chatbot (LangChain + Groq + Tavily)
-├─ dataset_main.csv         # example datasets
-├─ sugarcane_sensor_timeseries.csv
-└─ README.md
-```
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js 18+ (or Bun)
-- Python 3.10+
-- npm or yarn
-
-### Install & run frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-# Open http://localhost:5173
-```
-
-### Python backend (example)
-
-```bash
-python -m venv .venv
-source .venv/bin/activate   # on Windows: .venv\\Scripts\\activate
-pip install --upgrade pip
-pip install -r requirements.txt  # if you add one, otherwise install manually
-
-# Start FastAPI image service
-uvicorn app:app --host 0.0.0.0 --port 8000 --reload
-
-# Start Flask forecasting service
-python app2.py
-
-# Start chatbot (optional)
-python app_chatbot.py
-```
-
-## 🔬 API Examples
-
-- Image predict (FastAPI):
-
-```bash
-curl -F "file=@leaf.jpg" http://localhost:8000/predict
-```
-
-- Forecast (Flask):
-
-```bash
-curl -F "file=@sensor.csv" http://localhost:5000/results
-```
 
 ## 📌 Notes & Known Issues
 
