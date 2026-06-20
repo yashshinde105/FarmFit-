@@ -65,105 +65,150 @@ The forecasting API accepts a CSV upload, scales the data, generates future pred
 ### Chatbot support
 
 The chatbot API uses LangChain with a Groq-hosted OpenAI-compatible model and Tavily search to generate agricultural advice.
+# FarmFit — Sugarcane ML + Web App
 
-## Requirements
+FarmFit is a combined machine-learning backend and React frontend for monitoring sugarcane crop health. The project includes:
 
-This repository does not currently include a `requirements.txt`, so install dependencies manually based on the app you want to run.
+- An image classification service to detect sugarcane leaf diseases from photos.
+- A time-series forecasting service that predicts growth-stage and disease risk from sensor CSVs.
+- A chatbot assistant that turns model outputs into farmer-friendly recommendations using an LLM.
+- A React/Vite frontend that provides an interface to upload images/CSV and view results.
 
-Common packages used across the project include:
+This single README documents the full project (backend + frontend), how to run each component locally, important files, and next steps.
 
-- `fastapi`
-- `flask`
-- `uvicorn`
-- `tensorflow`
-- `numpy`
-- `pandas`
-- `scikit-learn`
-- `joblib`
-- `pillow`
-- `flask-cors`
-- `python-dotenv`
-- `langchain`
-- `langchain-openai`
-- `langchain-community`
+**Key ideas:**
 
-## Environment Variables
+- Keep the ML inference and forecasting services lightweight and API-driven so the React frontend can call them.
+- Provide a farmer-friendly assistant that translates numeric model outputs into short actionable steps.
+- Keep model artifacts next to the code so the project is reproducible locally; large models may be stored using Git LFS.
 
-The chatbot and LLM-based APIs expect these variables:
+## Repository layout (important files)
 
-- `GROQ_API_KEY`
-- `TAVILY_API_KEY`
+- `app.py` — FastAPI image classifier that loads `dominator.h5` and exposes `/predict`.
+- `app_test.py` — FastAPI variant that also integrates a treatment LLM flow.
+- `app2.py` — Flask time-series forecasting service that loads `latest_crop_TS_model.h5`, `Regressor.joblib`, `Classifier.joblib`, and `LSTM_scaler.joblib`.
+- `app_chatbot.py` — Flask chatbot API that uses LangChain + Groq + Tavily (requires API keys).
+- `dominator.h5`, `latest_crop_TS_model.h5`, `latest_model.h5`, `efficentnetv2-s.h5` — model artifacts used by the services.
+- `Classifier.joblib`, `Regressor.joblib`, `LSTM_scaler.joblib` — serialized sklearn artifacts and scalers.
+- `dataset_main.csv`, `sugarcane_sensor_timeseries.csv` — example datasets used for training and forecasting.
+- `test_images/` — sample images for quick manual tests.
+- `frontend/` — React/Vite frontend (copied from the separate UI project). Run the UI from this folder.
 
-Create a local `.env` file if you want to run `app_chatbot.py` or the LLM-enhanced FastAPI variant in `app_test.py`.
+## Features (what each component does)
 
-## Running the APIs
+- Image classifier: Accepts JPG/PNG uploads, resizes to 224×224, runs an EfficientNet-based model, and returns the top predictions with confidence and short treatment suggestions.
+- Forecasting API: Accepts a CSV dataset, scales and runs the LSTM-based time-series model to generate 60-step forecasts, runs regressors/classifiers on the forecast, and returns summary metrics (disease risk, pesticide level, growth stage, etc.).
+- Chatbot assistant: Converts predicted disease names into a short, farmer-friendly treatment plan using LLM tools and web search results.
+- Frontend: Single-page React app (Vite) that lets users upload images and CSVs, view predictions, and read assistant advice.
 
-### 0. Frontend app
+## Environment & Requirements
 
-Run the frontend from the `frontend/` folder:
+There is no single `requirements.txt` in this repo. Use the stacks below depending on what you run.
+
+Python backend (recommended virtualenv):
+
+```bash
+python -m venv .venv
+source .venv/bin/activate   # or .venv\\Scripts\\activate on Windows
+pip install --upgrade pip
+pip install fastapi uvicorn flask tensorflow numpy pandas scikit-learn joblib pillow python-dotenv flask-cors
+# add langchain and providers only if running the chatbot
+pip install langchain langchain-openai langchain-community
+```
+
+Frontend (Node):
 
 ```bash
 cd frontend
 npm install
-npm run dev
 ```
 
-The app runs with Vite and uses the backend APIs for prediction and assistant features.
+Notes:
 
-### 1. Image prediction API with FastAPI
+- TensorFlow installation and GPU support depend on your OS, Python version, and CUDA drivers. Use the official TF install guide for GPU setups.
+- Some model files are large and may use Git LFS. Ensure Git LFS is installed if you clone the repo with large artifacts.
 
-Run:
+## Environment variables
+
+Create a `.env` file (root or `frontend` as needed) for any of the following values used by the chatbot or frontend dev configuration:
+
+- `GROQ_API_KEY` — required for the Groq/OpenAI-compatible LLM in `app_chatbot.py` or `app_test.py`.
+- `TAVILY_API_KEY` — required for the Tavily search tool used by the assistant.
+
+## Run instructions (local)
+
+1) Start the image classifier (FastAPI):
 
 ```bash
+cd FARMFIT_MODEL
 uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-Open `http://localhost:8000/` and upload a sugarcane leaf image.
+Visit `http://localhost:8000/` to test the upload form.
 
-### 2. Crop forecasting API with Flask
-
-Run:
+2) Start the forecasting API (Flask):
 
 ```bash
 python app2.py
 ```
 
-Open `http://localhost:5000/` and upload a CSV file with sensor and growth-stage columns.
+Open `http://localhost:5000/` and upload a CSV to get the forecast JSON response.
 
-### 3. Chatbot API with Flask
-
-Run:
+3) Start the chatbot API (Flask, optional):
 
 ```bash
 python app_chatbot.py
 ```
 
-This starts the advisor API on port `5000`.
+Requires `GROQ_API_KEY` and `TAVILY_API_KEY` in the environment.
 
-### 4. LLM-enhanced FastAPI image API
-
-Run:
+4) Start the frontend (Vite):
 
 ```bash
-uvicorn app_test:app --host 0.0.0.0 --port 8000 --reload
+cd frontend
+npm run dev
 ```
 
-## Data and Model Notes
+The frontend will connect to the backend endpoints (default assumes backend on `localhost:8000` or `:5000`). If the frontend expects different ports, edit the API base URLs in `frontend/src/services` or environment config.
 
-- The image APIs expect images resized to `224 x 224`.
-- The forecasting API expects CSV data with the columns used in `app2.py`.
-- The chatbot API currently references `src.image_model.image_model_pipeline`, but that module is not present in this clone. Restore it before running `app_chatbot.py`.
+## API examples
 
-## Example Workflow
+- Image predict (curl):
 
-1. Start the API you want to test.
-2. Upload a sample image or CSV file.
-3. Read the returned disease class, confidence score, or forecast summary.
-4. Use the chatbot API if you want a natural-language treatment recommendation.
+```bash
+curl -F "file=@leaf.jpg" http://localhost:8000/predict
+```
 
-## Suggested Next Steps
+- Forecast (curl):
 
-- Add a `requirements.txt` so the project can be installed in one command.
-- Consolidate the duplicate APIs into a single documented backend.
-- Add sample request payloads and response examples to this README.
-- Restore or document the missing `src/image_model.py` dependency used by `app_chatbot.py`.
+```bash
+curl -F "file=@sensor.csv" http://localhost:5000/results
+```
+
+## Notes, known issues & next steps
+
+- `app_chatbot.py` references `src.image_model.image_model_pipeline` — this module may be missing in the current clone; restore or implement it before using the chatbot predict flow.
+- Consider adding a `requirements.txt` and `package.json` top-level pointers to ease onboarding.
+- Optionally split backend into its own folder (e.g., `backend/`) and provide Dockerfiles for reproducible deployment.
+
+## Contribution
+
+If you want to improve the project, suggested small PRs:
+
+- Add `requirements.txt` for the Python services and `package.json` validation for the frontend.
+- Add unit tests for the critical preprocessing functions.
+- Extract common configuration (ports, model paths) into a single `config.py` or `.env`-driven config.
+
+## License
+
+Add a LICENSE file to declare license terms. No license is included by default.
+
+---
+
+If you want, I can now:
+
+- add a `requirements.txt` for the backend I used to infer packages,
+- create a Dockerfile for the combined app, or
+- edit the frontend API base URLs to point at the deployed backend.
+
+Tell me which next step you prefer.
