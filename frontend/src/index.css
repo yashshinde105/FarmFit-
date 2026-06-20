@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* AgriTech Design System - All colors, gradients, fonts, etc defined here */
+
+@layer base {
+  :root {
+    /* Core theme colors - Agricultural green palette */
+    --background: 0 0% 100%;
+    --foreground: 155 15% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 155 15% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 155 15% 15%;
+
+    /* Primary - Agricultural green */
+    --primary: 142 76% 36%;
+    --primary-foreground: 0 0% 98%;
+    --primary-light: 142 76% 45%;
+    --primary-dark: 142 76% 25%;
+
+    /* Secondary - Earth tones */
+    --secondary: 120 12% 95%;
+    --secondary-foreground: 155 15% 15%;
+
+    --muted: 120 12% 95%;
+    --muted-foreground: 155 10% 45%;
+
+    /* Accent - Emerald highlight */
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 98%;
+
+    /* Status colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --warning: 45 93% 47%;
+    --warning-foreground: 0 0% 98%;
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+
+    /* Borders and inputs */
+    --border: 120 12% 90%;
+    --input: 120 12% 90%;
+    --ring: 142 76% 36%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(142 76% 36%), hsl(160 84% 39%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(120 12% 98%));
+    --gradient-feature: linear-gradient(120deg, hsl(142 76% 45%), hsl(142 76% 25%));
+
+    /* Shadows */
+    --shadow-soft: 0 2px 15px -3px hsl(142 76% 36% / 0.1);
+    --shadow-card: 0 4px 25px -5px hsl(142 76% 36% / 0.15);
+    --shadow-glow: 0 0 30px hsl(142 76% 36% / 0.3);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark mode - Deep green agricultural theme */
+    --background: 155 15% 8%;
+    --foreground: 120 12% 95%;
+
+    --card: 155 15% 10%;
+    --card-foreground: 120 12% 95%;
+
+    --popover: 155 15% 10%;
+    --popover-foreground: 120 12% 95%;
+
+    --primary: 142 76% 45%;
+    --primary-foreground: 155 15% 8%;
+
+    --secondary: 155 10% 15%;
+    --secondary-foreground: 120 12% 90%;
+
+    --muted: 155 10% 15%;
+    --muted-foreground: 120 12% 60%;
+
+    --accent: 160 84% 39%;
+    --accent-foreground: 155 15% 8%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 120 12% 95%;
+
+    --border: 155 10% 20%;
+    --input: 155 10% 20%;
+    --ring: 142 76% 45%;
+
+    /* Dark mode gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(142 76% 25%), hsl(160 84% 30%));
+    --gradient-card: linear-gradient(145deg, hsl(155 15% 10%), hsl(155 10% 15%));
+    --shadow-soft: 0 2px 15px -3px hsl(0 0% 0% / 0.3);
+    --shadow-card: 0 4px 25px -5px hsl(0 0% 0% / 0.4);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-medium;
+  }
+}
+
+@layer components {
+  /* Hero section styling */
+  .hero-gradient {
+    background: var(--gradient-hero);
+  }
+
+  /* Card components */
+  .card-gradient {
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Feature highlights */
+  .feature-gradient {
+    background: var(--gradient-feature);
+  }
+
+  /* Smooth transitions */
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+
+  /* Hover effects */
+  .hover-lift {
+    @apply transition-smooth;
+  }
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Text gradients */
+  .text-gradient {
+    background: var(--gradient-feature);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
